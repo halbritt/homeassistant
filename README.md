@@ -18,7 +18,7 @@ config it should run, and what was already tried and rejected.
 | OS | Home Assistant OS (HAOS) — appliance, not a general Linux host |
 | LAN | `192.168.1.64` (`enp3s0` ARP on proximal) |
 | Tailscale | `100.105.145.26` · hostname `homeassistant` · offers exit node |
-| HA core version | unknown until API access (not exposed unauthenticated) |
+| HA core version | 2026.7.2 (454 entities; read via ha-mcp `ha_eval_template`, 2026-07-21) |
 
 Verified 2026-07-21 from `proximal`.
 
