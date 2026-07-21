@@ -28,32 +28,39 @@ Verified 2026-07-21 from `proximal`.
   token (healthy; auth required).
 - **`:4357`** — HAOS observer. Reports: Supervisor **Connected**, Support
   **Supported**, Health **Healthy**.
+- **`:9583`** — **[ha-mcp](https://github.com/homeassistant-ai/ha-mcp)** add-on
+  (v7.14.1 as of 2026-07-21), the agent interface of record — see below.
 - **No SSH**: ports 22, 2222, and 22222 (HAOS developer SSH) all closed. Host
   administration happens through the HA UI / Supervisor, not a shell.
-- **MCP Server integration: not enabled** — `/mcp_server/sse` returns `404`.
-- **No credentials on proximal**: no long-lived access token or HA CLI config
-  found anywhere on the managing workstation.
+- **Native MCP Server integration: not enabled** (`/mcp_server/sse` → `404`) —
+  and not wanted: ha-mcp supersedes it.
 
-### Wiring up agent access (the plan of record)
+### Agent access (the plan of record)
 
-Home Assistant ships a native **MCP Server** integration; that is the intended
-agent interface for this fleet, not SSH.
+The **ha-mcp add-on** (streamable-HTTP MCP, ~89 tools: device control, state
+queries, automation management, and more) runs on the appliance at
+`:9583`. Its URL contains a **secret path segment** (`/private_…`) that serves
+as the credential — **the full URL is a secret; never commit it**. It lives
+only in the add-on config on the appliance and in `~/.claude*/.claude.json` on
+proximal.
 
-1. In the HA UI: *Settings → Devices & Services → Add Integration → MCP
-   Server*. This exposes `http://homeassistant:8123/mcp_server/sse`.
-2. Create a **long-lived access token** (user profile → Security). Store it on
-   proximal **outside any repo** (e.g. `~/.config/hass/token`, mode `0600`).
-3. Register with Claude Code on proximal:
+Registered on proximal at **user scope** (2026-07-21) so every Claude Code
+session sees it, via the tailnet IP (survives mDNS flakiness):
 
-   ```bash
-   claude mcp add --transport sse homeassistant \
-     http://100.105.145.26:8123/mcp_server/sse \
-     --header "Authorization: Bearer $(cat ~/.config/hass/token)"
-   ```
+```bash
+claude mcp add --transport http --scope user ha-mcp \
+  "http://100.105.145.26:9583/private_<SECRET>"
+```
 
-4. Once connected, capture into this repo: HA core/Supervisor/OS versions,
-   installed add-ons, integrations, and the entity registry snapshot — then
-   grow subsystem directories as they earn them.
+History: originally registered 
+project-local to `~/git/ha-mcp` (a clone of the upstream repo), which made it
+invisible to sessions launched anywhere else — that's the trap the user-scope
+registration fixes. Rotate the secret from the add-on's configuration page if
+the URL ever leaks.
+
+Next capture into this repo: HA core/Supervisor/OS versions, installed
+add-ons (ha-mcp's own version + config posture), integrations, and an entity
+registry snapshot — then grow subsystem directories as they earn them.
 
 ## Subsystems
 
