@@ -85,3 +85,12 @@ lamp binding, and a plant-drying-rate alert.
 One active repair: `mcp_proxy` `update_restart_required` (warning, raised
 2026-07-15) — the webhook-proxy integration wants a restart to finish an
 update. One persistent notification (not captured).
+
+## Addendum — later on 2026-07-22
+
+- The `mcp_proxy` repair was cleared by reloading the config entry
+  (`homeassistant.reload_config_entry` via ha-mcp); repairs now 0.
+- The two pending add-on updates were applied between capture and addendum:
+  ESPHome Device Builder → 2026.7.1, Matter Server → 9.1.0.
+- HA core restarted at 08:49 UTC; recorder history now starts 2026-07-11
+  (older runs purged).
