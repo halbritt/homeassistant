@@ -14,13 +14,13 @@ config it should run, and what was already tried and rejected.
 
 | fact | value |
 |---|---|
-| Hardware | Raspberry Pi (MAC `2c:cf:67:fb:66:0d`, RPi Trading OUI) |
+| Hardware | **Home Assistant Yellow** (CM4 carrier, board `yellow`; MAC `2c:cf:67:fb:66:0d` — the RPi Trading OUI is the CM4's, which is why it first scanned as a bare Pi) |
 | OS | Home Assistant OS (HAOS) — appliance, not a general Linux host |
 | LAN | `192.168.1.64` (`enp3s0` ARP on proximal) |
 | Tailscale | `100.105.145.26` · hostname `homeassistant` · offers exit node |
-| HA core version | 2026.7.2 (454 entities; read via ha-mcp `ha_eval_template`, 2026-07-21) |
+| Versions | see [`inventory.md`](inventory.md) — HAOS/Supervisor/core/add-ons, captured 2026-07-22 |
 
-Verified 2026-07-21 from `proximal`.
+Verified 2026-07-22 from `proximal` via ha-mcp.
 
 ## Access posture (as-found, 2026-07-21)
 
@@ -30,8 +30,10 @@ Verified 2026-07-21 from `proximal`.
   **Supported**, Health **Healthy**.
 - **`:9583`** — **[ha-mcp](https://github.com/homeassistant-ai/ha-mcp)** add-on
   (v7.14.1 as of 2026-07-21), the agent interface of record — see below.
-- **No SSH**: ports 22, 2222, and 22222 (HAOS developer SSH) all closed. Host
-  administration happens through the HA UI / Supervisor, not a shell.
+- **No SSH from the network**: ports 22, 2222, and 22222 (HAOS developer SSH)
+  all closed. The Terminal & SSH add-on *is* installed and running, but with no
+  exposed port — it's an ingress web terminal inside the HA UI only. Host
+  administration happens through the HA UI / Supervisor, not a network shell.
 - **Native MCP Server integration: not enabled** (`/mcp_server/sse` → `404`) —
   and not wanted: ha-mcp supersedes it.
 
@@ -58,13 +60,10 @@ invisible to sessions launched anywhere else — that's the trap the user-scope
 registration fixes. Rotate the secret from the add-on's configuration page if
 the URL ever leaks.
 
-Next capture into this repo: HA core/Supervisor/OS versions, installed
-add-ons (ha-mcp's own version + config posture), integrations, and an entity
-registry snapshot — then grow subsystem directories as they earn them.
-
 ## Subsystems
 
-None versioned yet — the appliance was inventoried from the outside only. Add a
+None versioned yet — [`inventory.md`](inventory.md) holds the whole-host
+snapshot (versions, add-ons, integrations, entity summary). Add a
 directory when a subsystem's config is worth versioning (e.g. `config/` for
 YAML packages, `addons/` for add-on settings, `automations/`); don't pre-create
 empty ones.
