@@ -60,6 +60,18 @@ invisible to sessions launched anywhere else — that's the trap the user-scope
 registration fixes. Rotate the secret from the add-on's configuration page if
 the URL ever leaks.
 
+## Data out to proximal Grafana
+
+The InfluxDB add-on (`:8086`, InfluxQL/v1, db `homeassistant`) already receives
+HA state exports via the `influxdb` integration, and is the data path for
+long-term charting on proximal's Grafana — the recorder only keeps ~10 days.
+The Grafana datasource (`influx-ha`) and the migrated **Plant Moisture**
+dashboard live in the proximal repo under
+[`observability/grafana/`](https://github.com/halbritt/proximal/tree/master/observability/grafana);
+this appliance only hosts the InfluxDB add-on and its `influxdb` integration.
+Grafana authenticates as a dedicated read-only Influx user (created in the
+add-on's Chronograf UI) — never the HA write user.
+
 ## Subsystems
 
 None versioned yet — [`inventory.md`](inventory.md) holds the whole-host
