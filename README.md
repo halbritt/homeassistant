@@ -65,12 +65,20 @@ the URL ever leaks.
 The InfluxDB add-on (`:8086`, InfluxQL/v1, db `homeassistant`) already receives
 HA state exports via the `influxdb` integration, and is the data path for
 long-term charting on proximal's Grafana — the recorder only keeps ~10 days.
-The Grafana datasource (`influx-ha`) and the migrated **Plant Moisture**
-dashboard live in the proximal repo under
+The Grafana datasource (`influx-ha`) and the **Plant Moisture** + **Indoor
+Environment** dashboards live in the proximal repo under
 [`observability/grafana/`](https://github.com/halbritt/proximal/tree/master/observability/grafana);
 this appliance only hosts the InfluxDB add-on and its `influxdb` integration.
 Grafana authenticates as a dedicated read-only Influx user (created in the
 add-on's Chronograf UI) — never the HA write user.
+
+**Appliance-side bridges for the dashboards** (created here, consumed there):
+
+- **Local Weather template sensors** — the `weather.*` domain is *not* written
+  to InfluxDB, so six template helpers (`sensor.local_weather_*`:
+  temperature, humidity, pressure, dew_point, wind_speed, uv_index) mirror
+  `weather.forecast_home` (met.no) into sensor-domain entities that do record,
+  feeding the Indoor Environment dashboard's "Weather (met.no)" overlays.
 
 ## Subsystems
 
