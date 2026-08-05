@@ -3,8 +3,9 @@
 Durable, inspectable, cross-agent **provenance and desired-state for the host
 `homeassistant`** — the Home Assistant OS appliance on the home LAN
 (`192.168.1.64` / tailnet `100.105.145.26`). One repo per system, one directory
-per subsystem. Sibling of [`proximal`](https://github.com/halbritt/proximal),
-which documents the workstation this fleet is managed from.
+per subsystem. The broader infrastructure authority is
+[`infra`](https://github.com/halbritt/infra), where this repository can be
+imported with its history after a dedicated secret audit.
 
 This is operational state, not a codebase. Its job is to remember — across runs
 and across agents — what this appliance looks like, how it is reached, what
@@ -67,7 +68,7 @@ HA state exports via the `influxdb` integration, and is the data path for
 long-term charting on proximal's Grafana — the recorder only keeps ~10 days.
 The Grafana datasource (`influx-ha`) and the **Plant Moisture** + **Indoor
 Environment** dashboards live in the proximal repo under
-[`observability/grafana/`](https://github.com/halbritt/proximal/tree/master/observability/grafana);
+[`hosts/proximal/config/observability/grafana/`](https://github.com/halbritt/infra/tree/master/hosts/proximal/config/observability/grafana);
 this appliance only hosts the InfluxDB add-on and its `influxdb` integration.
 Grafana authenticates as a dedicated read-only Influx user (created in the
 add-on's Chronograf UI) — never the HA write user.
